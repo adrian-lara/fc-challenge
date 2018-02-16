@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: fc-challenge
-          image: adrianlara/fc-challenge:v1.1
+          image: adrianlara/fc-challenge:v1.2
           ports:
             - containerPort: 3000
           env:

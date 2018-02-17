@@ -4,4 +4,4 @@ maxReplicas: 10
 
 image:
   repository: adrianlara/fc-challenge
-  tag: v1.6
+  tag: v1.7

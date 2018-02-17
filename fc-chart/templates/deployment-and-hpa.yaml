@@ -28,3 +28,17 @@ spec:
                 secretKeyRef:
                   name: fc-challenge-secrets
                   key: bearer_token
+
+---
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: fc-challenge-deployment-scaler
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: fc-challenge-deployment
+  minReplicas: {{ .Values.minReplicas }}
+  maxReplicas: {{ .Values.maxReplicas }}
+  targetCPUUtilizationPercentage: 50

@@ -23,3 +23,8 @@ spec:
                 secretKeyRef:
                   name: fc-challenge-secrets
                   key: secret-key-base
+            - name: bearer_token
+              valueFrom:
+                secretKeyRef:
+                  name: fc-challenge-secrets
+                  key: bearer_token

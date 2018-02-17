@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>apple-touch-icon.png - RDoc Documentation</title>
+<title>node-exporter.yaml - RDoc Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "../";
@@ -125,7 +125,50 @@
   </div>
 </nav>
 
-<main role="main" aria-label="Page public/apple-touch-icon.png">
+<main role="main" aria-label="Page prometheus/node-exporter.yaml">
+
+<p>apiVersion: v1 kind: Service metadata:</p>
+
+<pre>annotations:
+  prometheus.io/scrape: &#39;true&#39;
+labels:
+  app: node-exporter
+  name: node-exporter
+name: node-exporter</pre>
+
+<p>spec:</p>
+
+<pre>clusterIP: None
+ports:
+- name: scrape
+  port: 9100
+  protocol: TCP
+selector:
+  app: node-exporter
+type: ClusterIP</pre>
+<hr>
+
+<p>apiVersion: extensions/v1beta1 kind: DaemonSet metadata:</p>
+
+<pre>name: node-exporter</pre>
+
+<p>spec:</p>
+
+<pre>template:
+  metadata:
+    labels:
+      app: node-exporter
+    name: node-exporter
+  spec:
+    containers:
+    - image: prom/node-exporter
+      name: node-exporter
+      ports:
+      - containerPort: 9100
+        hostPort: 9100
+        name: scrape
+    hostNetwork: true
+    hostPID: true</pre>
 </main>
 
 

@@ -77,11 +77,31 @@
   
     <li><a href="./app/assets/stylesheets/application_css.html">application.css</a>
   
+    <li><a href="./app/assets/stylesheets/fonts_css.html">fonts.css</a>
+  
+    <li><a href="./app/assets/stylesheets/rdoc_css.html">rdoc.css</a>
+  
+    <li><a href="./app/views/aboutthisapp/index_html.html">index.html</a>
+  
     <li><a href="./config_ru.html">config.ru</a>
+  
+    <li><a href="./fc-chart/Chart_yaml.html">Chart.yaml</a>
+  
+    <li><a href="./fc-chart/templates/deployment-and-hpa_yaml.html">deployment-and-hpa.yaml</a>
+  
+    <li><a href="./fc-chart/templates/service_yaml.html">service.yaml</a>
+  
+    <li><a href="./fc-chart/values_yaml.html">values.yaml</a>
   
     <li><a href="./log/development_log.html">development.log</a>
   
     <li><a href="./package_json.html">package.json</a>
+  
+    <li><a href="./prometheus/node-exporter_yaml.html">node-exporter.yaml</a>
+  
+    <li><a href="./prometheus/prometheus-configmap_yaml.html">prometheus-configmap.yaml</a>
+  
+    <li><a href="./prometheus/prometheus-deployment_yaml.html">prometheus-deployment.yaml</a>
   
     <li><a href="./public/404_html.html">404.html</a>
   
@@ -110,6 +130,11 @@
 <p># This file is used by Rack-based servers to start the application.</p>
 
 <p>require_relative &#39;config/environment&#39;</p>
+
+<p>require &#39;prometheus/middleware/collector&#39; require
+&#39;prometheus/middleware/exporter&#39;</p>
+
+<p>use Prometheus::Middleware::Collector use Prometheus::Middleware::Exporter</p>
 
 <p>run Rails.application</p>
 </main>

@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title>class WelcomeController - RDoc Documentation</title>
+<title>class DocsController - RDoc Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
@@ -79,9 +79,9 @@
   </div>
 </nav>
 
-<main role="main" aria-labelledby="class-WelcomeController">
-  <h1 id="class-WelcomeController" class="class">
-    class WelcomeController
+<main role="main" aria-labelledby="class-DocsController">
+  <h1 id="class-DocsController" class="class">
+    class DocsController
   </h1>
 
   <section class="description">
@@ -124,9 +124,9 @@
 
           
           <div class="method-source-code" id="index-source">
-            <pre><span class="ruby-comment"># File app/controllers/welcome_controller.rb, line 3</span>
+            <pre><span class="ruby-comment"># File app/controllers/docs_controller.rb, line 3</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">index</span>
-
+  <span class="ruby-identifier">render</span> <span class="ruby-value">file:</span> <span class="ruby-constant">Rails</span>.<span class="ruby-identifier">public_path</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;/&quot;</span>,<span class="ruby-identifier">params</span>[<span class="ruby-value">:doc_page</span>]), <span class="ruby-value">layout:</span> <span class="ruby-keyword">true</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           

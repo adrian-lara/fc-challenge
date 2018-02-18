@@ -22,19 +22,27 @@ Clone this repository and navigate to it via terminal.
 Run the following command in your terminal:
 ```minikube start```
 
-## Step 3: A Caveat
+## Step 3: Secrets
 *The necessary secrets file is not included in this respository.*
 
-Save a copy of the (separately) provided secrets.yaml file and deploy that to Kubernetes.
-After saving the file locally,
-```kubectl create -f <path_to>/secrets.yml```
+Save a copy of the (separately) provided secrets.yaml file.
+Follow these steps:
+1. ```kubectl describe secret $(kubectl get secrets | grep default | cut -f1 -d ' ') | grep -E '^token' | cut -f2 -d':' | tr -d '\t'```
+2. Copy the output (without the preceding tab)
+3. ```echo <output> | base64```
+4. Copy the output into the secrets.yaml file by replacing the bearer_token value
+5. Deploy this to Kubernetes: ```kubectl create -f <path_to>/secrets.yml```
 
 ## Step 4: Deploy using the Helm chart
 This creates the Service, Deployment, and the Horizontal Pod Autoscaler (hsa).
+
 Within the cloned directory:
 ```helm init```
+
 *Wait a few minutes for tiller to complete deployment.*
 *You can also navigate to the kubernetes dashboard via `minikube dashboard` and check the status of the tiller-deploy*
+
+Then,
 ```helm install fc-chart```
 
 Also, use the following flags to customize installation:

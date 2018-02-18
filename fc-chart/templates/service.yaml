@@ -2,6 +2,8 @@ kind: Service
 apiVersion: v1
 metadata:
   name: fc-challenge-service
+  annotations:
+    prometheus.io/scrape: 'true'
 spec:
   selector:
     app: fc-challenge

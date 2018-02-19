@@ -129,7 +129,10 @@
 
 <p>kind: Service apiVersion: v1 metadata:</p>
 
-<pre>name: fc-challenge-service</pre>
+<pre>name: fc-challenge-service
+annotations:
+  prometheus.io/scrape: &#39;true&#39;
+  whereis.fullcontact.com/description: &#39;1&#39;</pre>
 
 <p>spec:</p>
 

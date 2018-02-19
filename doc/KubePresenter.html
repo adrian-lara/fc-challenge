@@ -79,6 +79,8 @@
     
     <li ><a href="#method-i-services">#services</a>
     
+    <li ><a href="#method-i-services_annotation_values">#services_annotation_values</a>
+    
   </ul>
 </div>
 
@@ -240,6 +242,43 @@
             <pre><span class="ruby-comment"># File app/models/kube_presenter.rb, line 7</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">services</span>
   <span class="ruby-identifier">client</span>.<span class="ruby-identifier">get_services</span>[<span class="ruby-value">0</span>]
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-services_annotation_values" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">services_annotation_values</span><span
+            class="method-args">(annotation)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="services_annotation_values-source">
+            <pre><span class="ruby-comment"># File app/models/kube_presenter.rb, line 19</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">services_annotation_values</span>(<span class="ruby-identifier">annotation</span>)
+  <span class="ruby-identifier">services_with_annotation</span>(<span class="ruby-identifier">annotation</span>).<span class="ruby-identifier">map</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">service</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">name_value</span> = {}
+    <span class="ruby-identifier">name_value</span>[<span class="ruby-identifier">service</span>[<span class="ruby-string">&quot;metadata&quot;</span>][<span class="ruby-string">&quot;name&quot;</span>]] = <span class="ruby-identifier">service</span>[<span class="ruby-string">&quot;metadata&quot;</span>][<span class="ruby-string">&quot;annotations&quot;</span>][<span class="ruby-identifier">annotation</span>]
+    <span class="ruby-identifier">name_value</span>
+  <span class="ruby-keyword">end</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           

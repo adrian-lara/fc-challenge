@@ -52,6 +52,23 @@
   </div>
 
   
+<div class="nav-section">
+  <h3>Table of Contents</h3>
+
+  <ul class="link-list" role="directory">
+    <li><a href="#label-FC+Challenge">FC Challenge</a>
+    <li><a href="#label-Setup">Setup</a>
+    <li><a href="#label-Tools+Needed">Tools Needed</a>
+    <li><a href="#label-Step+1-3A+Clone+Repository">Step 1: Clone Repository</a>
+    <li><a href="#label-Step+2-3A+Start+Minikube">Step 2: Start Minikube</a>
+    <li><a href="#label-Step+3-3A+Secrets">Step 3: Secrets</a>
+    <li><a href="#label-Step+4-3A+Deploy+using+the+Helm+chart">Step 4: Deploy using the Helm chart</a>
+    <li><a href="#label-Additionally...">Additionally…</a>
+    <li><a href="#label-Building+a+Docker+image">Building a Docker image</a>
+    <li><a href="#label-The+web+application-27s+documentation">The web application&#39;s documentation</a>
+  </ul>
+</div>
+
 
   <div id="project-metadata">
     <div id="fileindex-section" class="nav-section">
@@ -127,31 +144,94 @@
 
 <main role="main" aria-label="Page README.md">
 
-<h1 id="label-README"><a href="README_md.html">README</a><span><a href="#label-README">&para;</a> <a href="#top">&uarr;</a></span></h1>
+<h1 id="label-FC+Challenge">FC Challenge<span><a href="#label-FC+Challenge">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>This <a href="README_md.html">README</a> would normally document whatever
-steps are necessary to get the application up and running.</p>
+<p>Features of this application: * an endpoint that hosts kubernetes
+deployment information rendered as JSON * parsed documentation about itself
+compiled using <a href="https://github.com/ruby/rdoc">rdoc gem</a> * a
+corresponding Docker image that can be deployed locally.</p>
 
-<p>Things you may want to cover:</p>
+<h3 id="label-Setup">Setup<span><a href="#label-Setup">&para;</a> <a href="#top">&uarr;</a></span></h3>
+
+<h4 id="label-Tools+Needed">Tools Needed<span><a href="#label-Tools+Needed">&para;</a> <a href="#top">&uarr;</a></span></h4>
 <ul><li>
-<p>Ruby version</p>
+<p>Docker (Edge)</p>
 </li><li>
-<p>System dependencies</p>
+<p>With Kubernetes Enabled and Installed</p>
 </li><li>
-<p>Configuration</p>
+<p>Minikube</p>
 </li><li>
-<p>Database creation</p>
+<p>kubectl</p>
 </li><li>
-<p>Database initialization</p>
-</li><li>
-<p>How to run the test suite</p>
-</li><li>
-<p>Services (job queues, cache servers, search engines, etc.)</p>
-</li><li>
-<p>Deployment instructions</p>
-</li><li>
-<p>...</p>
+<p>Helm</p>
 </li></ul>
+
+<h2 id="label-Step+1-3A+Clone+Repository">Step 1: Clone Repository<span><a href="#label-Step+1-3A+Clone+Repository">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Clone this repository and navigate to it via terminal.</p>
+
+<h2 id="label-Step+2-3A+Start+Minikube">Step 2: Start Minikube<span><a href="#label-Step+2-3A+Start+Minikube">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>Run the following command in your terminal: <code>minikube start</code></p>
+
+<h2 id="label-Step+3-3A+Secrets">Step 3: Secrets<span><a href="#label-Step+3-3A+Secrets">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p><em>The necessary secrets file is not included in this respository.</em></p>
+
+<p>Save a copy of the (separately) provided secrets.yaml file. Follow these
+steps: 1. <code>kubectl describe secret $(kubectl get secrets | grep
+default | cut -f1 -d &#39; &#39;) | grep -E &#39;^token&#39; | cut -f2
+-d&#39;:&#39; | tr -d &#39;\t&#39;</code> 2. Copy the output (without the
+preceding tab) 3. <code>echo &lt;output&gt; | base64</code> 4. Copy the
+output into the secrets.yaml file by replacing the bearer_token value 5.
+Deploy this to Kubernetes: <code>kubectl create -f
+&lt;path_to&gt;/secrets.yml</code></p>
+
+<h2 id="label-Step+4-3A+Deploy+using+the+Helm+chart">Step 4: Deploy using the Helm chart<span><a href="#label-Step+4-3A+Deploy+using+the+Helm+chart">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>This creates the Service, Deployment, and the Horizontal Pod Autoscaler
+(hsa).</p>
+
+<p>Within the cloned directory: <code>helm init</code></p>
+
+<p><em>Wait a few minutes for tiller to complete deployment.</em> <em>You can
+also navigate to the kubernetes dashboard via <code>minikube
+dashboard</code> and check the status of the tiller-deploy</em></p>
+
+<p>Then, <code>helm install fc-chart</code></p>
+
+<p>Also, use the following flags to customize installation: * <code>--set
+replicaCount=&lt;number&gt;</code> * <code>--set
+image.repository=&lt;repository&gt;</code> * <code>--set
+image.tag=&lt;tag&gt;</code></p>
+
+<p>Once this is installed, you can navigate to * kubernetes dashboard via
+<code>minikube dashboard</code> * application built off this
+applications&#39; published image via <code>minikube service
+fc-challenge-service</code>  * The metrics for this app are located at the
+&#39;/metrics&#39; endpoint are rendered in JSON format.</p>
+
+<h1 id="label-Additionally...">Additionally…<span><a href="#label-Additionally...">&para;</a> <a href="#top">&uarr;</a></span></h1>
+
+<h2 id="label-Building+a+Docker+image">Building a Docker image<span><a href="#label-Building+a+Docker+image">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>The command to build a new docker image out of the current directory with a
+specified docker repository is<br> <code>docker build -t
+&lt;repository&gt;:&lt;optional_tag&gt; .</code> You&#39;re able to run
+this because of the <a href="Dockerfile.html">Dockerfile</a> within this
+repository. That file defines how the image</p>
+
+<p>For example, in order to build the images of this application <a
+href="https://hub.docker.com/r/adrianlara/fc-challenge/tags">located
+here</a>, I typed: <code>docker build -t adrianlara/fc-challenge:v1.7
+.</code></p>
+
+<h2 id="label-The+web+application-27s+documentation">The web application&#39;s documentation<span><a href="#label-The+web+application-27s+documentation">&para;</a> <a href="#top">&uarr;</a></span></h2>
+
+<p>An instance of the parsed documentation for this app can be found on the
+actual web app, but if you’d like to compile the docs locally, you’ll need
+to: 1. clone this repo 2. bundle install 3. run <code>rdoc</code> <em>(note
+that this will locally replace the docs that are currently in the app)</em></p>
 </main>
 
 

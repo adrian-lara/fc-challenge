@@ -16,9 +16,11 @@ class KubePresenter
     client.all_entities(namespace: "default")["pod"]
   end
 
-  def annotation_value(annotation)
+  def services_annotation_values(annotation)
     services_with_annotation(annotation).map do |service|
-      service["metadata"]["annotations"][annotation]
+      name_value = {}
+      name_value[service["metadata"]["name"]] = service["metadata"]["annotations"][annotation]
+      name_value
     end
   end
 

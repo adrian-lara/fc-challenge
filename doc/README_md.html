@@ -61,7 +61,7 @@
     <li><a href="#label-Tools+Needed">Tools Needed</a>
     <li><a href="#label-Step+1-3A+Clone+Repository">Step 1: Clone Repository</a>
     <li><a href="#label-Step+2-3A+Start+Minikube">Step 2: Start Minikube</a>
-    <li><a href="#label-Step+3-3A+Secrets">Step 3: Secrets</a>
+    <li><a href="#label-Step+3-3A+Manually+Deploy+Secrets">Step 3: Manually Deploy Secrets</a>
     <li><a href="#label-Step+4-3A+Deploy+using+the+Helm+chart">Step 4: Deploy using the Helm chart</a>
     <li><a href="#label-Additionally...">Additionally…</a>
     <li><a href="#label-Building+a+Docker+image">Building a Docker image</a>
@@ -146,10 +146,23 @@
 
 <h1 id="label-FC+Challenge">FC Challenge<span><a href="#label-FC+Challenge">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
-<p>Features of this application: * an endpoint that hosts kubernetes
-deployment information rendered as JSON * parsed documentation about itself
-compiled using <a href="https://github.com/ruby/rdoc">rdoc gem</a> * a
-corresponding Docker image that can be deployed locally.</p>
+<p>About this application: * renders documentation including comments compiled
+using <a href="https://github.com/ruby/rdoc">rdoc gem</a>  * can recreate
+this documentation locally * exports its metrics to Prometheus via service
+annotation <code>prometheus.io/scrape: &#39;true&#39;</code>  * also has a
+“/metrics” endpoint that can be visited by manually appending that uri. *
+has an <code>/aboutthisapp</code> endpoint that hosts kubernetes deployment
+information rendered as JSON  * Note, this information is presented from
+the general perspective as opposed to as metadata presented from the
+perspective of the currently used pod. (<a
+href="https://github.com/adrian-lara/fc-challenge/issues/2">Issue #2</a>) *
+has a page that scans for the values of
+<code>whereis.fullcontact.com/description</code> annotations <strong>(of
+services only)</strong> * uses <a
+href="https://github.com/abonas/kubeclient">kubeclient</a> as Kubernetes
+API Client library. * has a corresponding Docker image that can be deployed
+locally via Helm Chart.  * Helm Chart deployment can be executed with
+custom min/max/desired replicas, docker image, and docker tag</p>
 
 <h3 id="label-Setup">Setup<span><a href="#label-Setup">&para;</a> <a href="#top">&uarr;</a></span></h3>
 
@@ -174,42 +187,44 @@ corresponding Docker image that can be deployed locally.</p>
 
 <p>Run the following command in your terminal: <code>minikube start</code></p>
 
-<h2 id="label-Step+3-3A+Secrets">Step 3: Secrets<span><a href="#label-Step+3-3A+Secrets">&para;</a> <a href="#top">&uarr;</a></span></h2>
+<h2 id="label-Step+3-3A+Manually+Deploy+Secrets">Step 3: Manually Deploy Secrets<span><a href="#label-Step+3-3A+Manually+Deploy+Secrets">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
 <p><em>The necessary secrets file is not included in this respository.</em></p>
 
 <p>Save a copy of the (separately) provided secrets.yaml file. Follow these
-steps: 1. <code>kubectl describe secret $(kubectl get secrets | grep
+steps: 1. Enter this into the terminal to produce a base64-encoded bearer
+token: <code>echo $(kubectl describe secret $(kubectl get secrets | grep
 default | cut -f1 -d &#39; &#39;) | grep -E &#39;^token&#39; | cut -f2
--d&#39;:&#39; | tr -d &#39;\t&#39;</code> 2. Copy the output (without the
-preceding tab) 3. <code>echo &lt;output&gt; | base64</code> 4. Copy the
-output into the secrets.yaml file by replacing the bearer_token value 5.
-Deploy this to Kubernetes: <code>kubectl create -f
+-d&#39;:&#39; | tr -d &#39;\t&#39;) | base64</code> 2. Copy the output into
+the secrets.yaml file by replacing the value of <code>bearer_token</code>
+3. Deploy this to Kubernetes: <code>kubectl create -f
 &lt;path_to&gt;/secrets.yml</code></p>
 
 <h2 id="label-Step+4-3A+Deploy+using+the+Helm+chart">Step 4: Deploy using the Helm chart<span><a href="#label-Step+4-3A+Deploy+using+the+Helm+chart">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
 <p>This creates the Service, Deployment, and the Horizontal Pod Autoscaler
-(hsa).</p>
+(hpa).</p>
 
 <p>Within the cloned directory: <code>helm init</code></p>
 
-<p><em>Wait a few minutes for tiller to complete deployment.</em> <em>You can
-also navigate to the kubernetes dashboard via <code>minikube
-dashboard</code> and check the status of the tiller-deploy</em></p>
+<p><em>Wait a few minutes for tiller to complete deployment.</em> <em>If
+you&#39;d like to check the status of the tiller-deploy visit the dashboard
+by typing <code>minikube dashboard</code> into the terminal</em></p>
 
-<p>Then, <code>helm install fc-chart</code></p>
+<p>Then, install the locally available chart named “fc-chart”: <code>helm
+install fc-chart</code></p>
 
 <p>Also, use the following flags to customize installation: * <code>--set
 replicaCount=&lt;number&gt;</code> * <code>--set
+minReplicas=&lt;number&gt;</code> * <code>--set
+maxReplicas=&lt;number&gt;</code> * <code>--set
 image.repository=&lt;repository&gt;</code> * <code>--set
 image.tag=&lt;tag&gt;</code></p>
 
-<p>Once this is installed, you can navigate to * kubernetes dashboard via
-<code>minikube dashboard</code> * application built off this
-applications&#39; published image via <code>minikube service
-fc-challenge-service</code>  * The metrics for this app are located at the
-&#39;/metrics&#39; endpoint are rendered in JSON format.</p>
+<p>Once this is installed, you can navigate to the * kubernetes dashboard
+using <code>minikube dashboard</code> * the application built off of the
+published image using <code>minikube service fc-challenge-service</code>  *
+The metrics for this app are located at the &#39;/metrics&#39; endpoint</p>
 
 <h1 id="label-Additionally...">Additionally…<span><a href="#label-Additionally...">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
@@ -219,11 +234,11 @@ fc-challenge-service</code>  * The metrics for this app are located at the
 specified docker repository is<br> <code>docker build -t
 &lt;repository&gt;:&lt;optional_tag&gt; .</code> You&#39;re able to run
 this because of the <a href="Dockerfile.html">Dockerfile</a> within this
-repository. That file defines how the image</p>
+repository. That file defines how the image is built.</p>
 
 <p>For example, in order to build the images of this application <a
 href="https://hub.docker.com/r/adrianlara/fc-challenge/tags">located
-here</a>, I typed: <code>docker build -t adrianlara/fc-challenge:v1.7
+here</a>, I executed: <code>docker build -t adrianlara/fc-challenge:v1.8
 .</code></p>
 
 <h2 id="label-The+web+application-27s+documentation">The web application&#39;s documentation<span><a href="#label-The+web+application-27s+documentation">&para;</a> <a href="#top">&uarr;</a></span></h2>

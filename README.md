@@ -1,12 +1,16 @@
 # FC Challenge
 
 About this application:
-* has an endpoint that hosts kubernetes deployment information rendered as JSON
-* has a page that scans for the values of `whereis.fullcontact.com/description` annotations **(of services only)**
 * renders documentation including comments compiled using [rdoc gem](https://github.com/ruby/rdoc)
   * can recreate this documentation locally
+* exports its metrics to Prometheus via service annotation `prometheus.io/scrape: 'true'`
+  * also has a "/metrics" endpoint that can be visited by manually appending that uri.
+* has an `/aboutthisapp` endpoint that hosts kubernetes deployment information rendered as JSON
+  * Note, this information is presented from the general perspective as opposed to as metadata presented from the perspective of the currently used pod. ([Issue #2](https://github.com/adrian-lara/fc-challenge/issues/2))
+* has a page that scans for the values of `whereis.fullcontact.com/description` annotations **(of services only)**
 * uses [kubeclient](https://github.com/abonas/kubeclient) as Kubernetes API Client library.
 * has a corresponding Docker image that can be deployed locally via Helm Chart.
+  * Helm Chart deployment can be executed with custom min/max/desired replicas, docker image, and docker tag
 
 ### Setup
 
@@ -50,6 +54,8 @@ Then, install the locally available chart named "fc-chart":
 
 Also, use the following flags to customize installation:
 * ```--set replicaCount=<number>```
+* ```--set minReplicas=<number>```
+* ```--set maxReplicas=<number>```
 * ```--set image.repository=<repository>```
 * ```--set image.tag=<tag>```
 

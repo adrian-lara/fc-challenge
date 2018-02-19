@@ -4,6 +4,7 @@ metadata:
   name: fc-challenge-service
   annotations:
     prometheus.io/scrape: 'true'
+    whereis.fullcontact.com/description: '1'
 spec:
   selector:
     app: fc-challenge

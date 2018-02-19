@@ -17,18 +17,6 @@ spec:
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
           ports:
             - containerPort: 3000
-          env:
-            - name: SECRET_KEY_BASE
-              valueFrom:
-                secretKeyRef:
-                  name: fc-challenge-secrets
-                  key: secret-key-base
-            - name: bearer_token
-              valueFrom:
-                secretKeyRef:
-                  name: fc-challenge-secrets
-                  key: bearer_token
-
 ---
 
 apiVersion: autoscaling/v1

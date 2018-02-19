@@ -29,18 +29,7 @@ Clone this repository and navigate to it via terminal.
 Run the following command in your terminal:
 ```minikube start```
 
-## Step 3: Manually Deploy Secrets
-*The necessary secrets file is not included in this respository.*
-
-Save a copy of the (separately) provided secrets.yaml file.
-Follow these steps:
-1. Enter this into the terminal to produce a base64-encoded bearer token: 
-```echo $(kubectl describe secret $(kubectl get secrets | grep default | cut -f1 -d ' ') | grep -E '^token' | cut -f2 -d':' | tr -d '\t') | base64```
-2. Copy the output into the secrets.yaml file by replacing the value of `bearer_token`
-3. Deploy this to Kubernetes: 
-```kubectl create -f <path_to>/secrets.yml```
-
-## Step 4: Deploy using the Helm chart
+## Step 3: Deploy using the Helm chart
 This creates the Service, Deployment, and the Horizontal Pod Autoscaler (hpa).
 
 Within the cloned directory:

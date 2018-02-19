@@ -3,7 +3,7 @@ class AnnotationSearchController < ApplicationController
   def service
     presenter = KubePresenter.new
 
-    render json: presenter.annotation("whereis.fullcontact.com/description")
+    @annotation_values = presenter.services_annotation_values("whereis.fullcontact.com/description")
   end
 
 end

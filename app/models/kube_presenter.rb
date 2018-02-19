@@ -16,6 +16,12 @@ class KubePresenter
     client.all_entities(namespace: "default")["pod"]
   end
 
+  def annotation_value(annotation)
+    services_with_annotation(annotation).map do |service|
+      service["metadata"]["annotations"][annotation]
+    end
+  end
+
   private
 
     attr_reader :client
@@ -25,5 +31,11 @@ class KubePresenter
       ssl_options = { verify_ssl: OpenSSL::SSL::VERIFY_NONE }
 
       @client = Kubeclient::Client.new('https://192.168.99.100:8443/api/', 'v1', ssl_options: ssl_options, auth_options: auth_options)
+    end
+
+    def services_with_annotation(annotation)
+      client.get_services.select do |service|
+        service.try("metadata").try("annotations").try(annotation)
+      end
     end
 end

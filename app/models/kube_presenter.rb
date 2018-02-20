@@ -32,7 +32,11 @@ class KubePresenter
       auth_options = { bearer_token_file: "/var/run/secrets/kubernetes.io/serviceaccount/token" }
       ssl_options = { verify_ssl: OpenSSL::SSL::VERIFY_NONE }
 
-      @client = Kubeclient::Client.new('https://192.168.99.100:8443/api/', 'v1', ssl_options: ssl_options, auth_options: auth_options)
+      @client = Kubeclient::Client.new("https://#{ENV["KUBERNETES_SERVICE_HOST"]}:#{ENV["KUBERNETES_SERVICE_PORT"]}/api/",
+        'v1',
+        ssl_options: ssl_options,
+        auth_options: auth_options
+      )
     end
 
     def services_with_annotation(annotation)
